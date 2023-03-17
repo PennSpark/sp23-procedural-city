@@ -48,25 +48,43 @@ class Tile:
                 raise Exception("invalid direction")
 
 class Block:
-    def __init__(self, tile):
-        self.tile = tile
-        self.possible_tiles = set()
+    def __init__(self, tile = None):
+        self._tile = tile
+        self._possible_tiles = set()
 
+    # Check if block is tiled
     def is_tiled(self):
-        return self.tile != None
+        return self._tile != None
 
+    # Returns number of possible tiles in current block
     def num_possible_tiles(self):
-        return len(self.possible_tiles)
+        return len(self._possible_tiles)
 
+    def get_tile(self):
+        return self._tile
 
-def choice():
-    pass
-    # logic assumes this is an open tile, otherwise just pass (shouldn't have to deal with this case)
-    # start with list of every tile (can be a set)
-    # intersect it corresponding set of neighbors (for example, intersect with right_set of left neighbor)
-    # if the remaining set is empty, then WFC again from scratch
-    # otherwise, choose a random tile from the set and place it in the position
-    # too tired to write this rn, we can talk about it at meeting
+    def set_tile(self, tile):
+        self._tile = tile
+
+    def get_possible_tiles(self):
+        return self._possible_tiles
+
+    def set_possible_tiles(self, possible_tiles)
+        self._possible_tiles = possible_tiles
+
+def choice(block):
+    if block.is_tiled():
+        pass
+    
+    # Assume possible set of tiles for block is valid
+    # Pick a tile from the set
+    # For now just pick tile at index 0, TODO: add probability distribution for pick
+    block.set_tile(block.get_possible_tiles[0])
+
+    # Update neighbors' possible tiles
+        # If neighbor inbounds:
+            # If neighbor untiled:
+                # Update neighbor's possible tile set to be the intersection of curr tile's direction set and neighbor's set
 
 
 
