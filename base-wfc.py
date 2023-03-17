@@ -1,3 +1,6 @@
+# Tile refers to general tile types
+# Block refers to an individual block in the x by y by z board. Each block may be untiled or tiled.
+
 class Tile:
     # Define tile name, initialize empty direction sets
     def __init__(self, name):
@@ -44,6 +47,17 @@ class Tile:
             case _:
                 raise Exception("invalid direction")
 
+class Block:
+    def __init__(self, tile):
+        self.tile = tile
+        self.possible_tiles = set()
+
+    def is_tiled(self):
+        return self.tile != None
+
+    def num_possible_tiles(self):
+        return len(self.possible_tiles)
+
 
 def choice():
     pass
@@ -58,6 +72,7 @@ def choice():
 
 def main():
     board = [["X"] * 3] * 3
+    # Coordinate for tileable block located at (x, y, z) is board[z][y][x]
     tile_1 = Tile("tile_1")
     tile_2 = Tile("tile_2")
     tile_1.add_to_set("left", ["tile_1, tile_2"])
