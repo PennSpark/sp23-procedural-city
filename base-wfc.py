@@ -1,5 +1,5 @@
 class Tile:
-    #define tile name, initialize empty direction sets
+    # Define tile name, initialize empty direction sets
     def __init__(self, name):
         self.name = name
         self.left_set = set()
@@ -9,7 +9,7 @@ class Tile:
         self.front_set = set()
         self.back_set = set()
     
-    #add list of tiles to a direction set
+    # Add list of tiles to a direction set
     def add_to_set(self, dir, list):
         match dir:
             case "left":
@@ -47,12 +47,12 @@ class Tile:
 
 def choice():
     pass
-    #logic assumes this is an open tile, otherwise just pass (shouldn't have to deal with this case)
-    #start with list of every tile (can be a set)
-    #intersect it corresponding set of neighbors (for example, intersect with right_set of left neighbor)
-    #if the remaining set is empty, then WFC again from scratch
-    #otherwise, choose a random tile from the set and place it in the position
-    #too tired to write this rn, we can talk about it at meeting
+    # logic assumes this is an open tile, otherwise just pass (shouldn't have to deal with this case)
+    # start with list of every tile (can be a set)
+    # intersect it corresponding set of neighbors (for example, intersect with right_set of left neighbor)
+    # if the remaining set is empty, then WFC again from scratch
+    # otherwise, choose a random tile from the set and place it in the position
+    # too tired to write this rn, we can talk about it at meeting
 
 
 
