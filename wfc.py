@@ -2,7 +2,7 @@ import heapq
 from tile import Tile
 from block import Block
 import random
-import maya.cmds as cmds
+# import maya.cmds as cmds
 
 # Tile refers to general tile types
 # Block refers to an individual block in the x by y by z board. Each block may be untiled or tiled.
@@ -33,11 +33,12 @@ class Board:
                 name_row = map(Tile.getTileName, tile_row)
                 print(*name_row)
 
-    def place_tile(self, tile, x, y, z):
-        cmds.duplicate(f"{tile._name}")
-        cmds.move(x+1, y+1, z+1)
+    # def place_tile(self, tile, x, y, z):
+    #     cmds.duplicate(f"{tile._name}")
+    #     cmds.move(x+1, y+1, z+1)
 
     def choice(self, x, y, z):
+        print("{}, {}, {}".format(x, y, z))
         block = self.board[z][y][x]
 
         if block.is_tiled():
@@ -52,7 +53,7 @@ class Board:
         # For now just pick tile at index 0, TODO: add probability distribution for pick
         tile_placed = random.choice(list(block.get_possible_tiles()))
         block.set_tile(tile_placed)
-        self.place_tile(tile_placed, x, y, z)
+        # self.place_tile(tile_placed, x, y, z)
         print("Placed tile " + tile_placed.getTileName() + " at block " + str((x, y, z)))
 
         # Update neighbors' possible tiles
@@ -81,7 +82,7 @@ class Board:
             self.board[z + 1][y][x].set_possible_tiles((self.board[z + 1][y][x].get_possible_tiles()).intersection(block.get_tile().get_set("up")))
 
     def is_block_inbounds(self, x, y, z):
-        return x < len(self.board) and y < len(self.board[0]) and z < len(self.board[0][0])
+        return x < len(self.board[0][0]) and y < len(self.board[0]) and z < len(self.board)
     
 
 def main():
