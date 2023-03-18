@@ -1,56 +1,69 @@
 # Tile refers to general tile types
 # Block refers to an individual block in the x by y by z board. Each block may be untiled or tiled.
+# Coordinate for tileable block located at (x, y, z) is board[z][y][x]
+
+# Directions
+# West: -x
+# East: +x
+# North: -y
+# South: +y
+# Up: +z
+# Down: -z
+
+# Global variables for board dimensions
+X, Y, Z = 3, 3, 3
 
 class Tile:
     # Define tile name, initialize empty direction sets
     def __init__(self, name):
         self.name = name
-        self.left_set = set()
-        self.right_set = set()
+        self.west_set = set()
+        self.east_set = set()
+        self.north_set = set()
+        self.south_set = set()
         self.up_set = set()
         self.down_set = set()
-        self.front_set = set()
-        self.back_set = set()
     
     # Add list of tiles to a direction set
     def add_to_set(self, dir, list):
         match dir:
-            case "left":
-                self.left_set.update(list)
-            case "right":
-                self.right_set.update(list)
+            case "west":
+                self.west_set.update(list)
+            case "east":
+                self.east_set.update(list)
+            case "north":
+                self.north_set.update(list)
+            case "south":
+                self.south_set.update(list)
             case "up":
                 self.up_set.update(list)
             case "down":
                 self.down_set.update(list)
-            case "front":
-                self.front_set.update(list)
-            case "back":
-                self.back_set.update(list)
             case _:
                 raise Exception("invalid direction")
             
     def remove_from_set(self, dir, item):
         match dir:
-            case "left":
-                self.left_set.remove(item)
-            case "right":
-                self.right_set.remove(item)
+            case "west":
+                self.west_set.remove(item)
+            case "east":
+                self.east_set.remove(item)
+            case "north":
+                self.north_set.remove(item)
+            case "south":
+                self.south_set.remove(item)
             case "up":
                 self.up_set.remove(item)
             case "down":
                 self.down_set.remove(item)
-            case "front":
-                self.front_set.remove(item)
-            case "back":
-                self.back_set.remove(item)
             case _:
                 raise Exception("invalid direction")
 
 class Block:
     def __init__(self, tile = None):
         self._tile = tile
-        self._possible_tiles = set()
+        # TODO: initialize this to the set of all tiles once that is implemented
+        self._possible_tiles = [Tile("tile_1"), Tile("tile_2")]
 
     # Check if block is tiled
     def is_tiled(self):
@@ -60,6 +73,7 @@ class Block:
     def num_possible_tiles(self):
         return len(self._possible_tiles)
 
+    # Getters and setters
     def get_tile(self):
         return self._tile
 
@@ -72,28 +86,51 @@ class Block:
     def set_possible_tiles(self, possible_tiles)
         self._possible_tiles = possible_tiles
 
-def choice(block):
+def choice(x, y, z):
+    block = board[z][y][x]
+
     if block.is_tiled():
         pass
     
-    # Assume possible set of tiles for block is valid
+    # Assumes possible set of tiles for block is valid
     # Pick a tile from the set
     # For now just pick tile at index 0, TODO: add probability distribution for pick
     block.set_tile(block.get_possible_tiles[0])
 
     # Update neighbors' possible tiles
-        # If neighbor inbounds:
-            # If neighbor untiled:
-                # Update neighbor's possible tile set to be the intersection of curr tile's direction set and neighbor's set
+        # x - 1 (West)
+        if is_block_inbounds(x - 1, y, z) and not board[z][y][x - 1].is_tiled():
+            board[z][y][x - 1].set_possible_tiles((board[z][y][x - 1].get_possible_tiles).intersection(block.get_tile().get_west_set()))
 
+        # x + 1 (East)
+        if is_block_inbounds(x + 1, y, z) and not board[z][y][x + 1].is_tiled():
+            board[z][y][x + 1].set_possible_tiles((board[z][y][x + 1].get_possible_tiles).intersection(block.get_tile().get_east_set()))
 
+        # y - 1 (North)
+        if is_block_inbounds(x, y - 1, z) and not board[z][y - 1][x].is_tiled():
+            board[z][y - 1][x].set_possible_tiles((board[z][y - 1][x].get_possible_tiles).intersection(block.get_tile().get_north_set()))
+
+        # y + 1 (South)
+        if is_block_inbounds(x, y + 1, z) and not board[z][y + 1][x].is_tiled():
+            board[z][y + 1][x].set_possible_tiles((board[z][y + 1][x].get_possible_tiles).intersection(block.get_tile().get_south_set()))
+
+        # z - 1 (Down)
+        if is_block_inbounds(x, y, z - 1) and not board[z - 1][y][x].is_tiled():
+            board[z - 1][y][x].set_possible_tiles((board[z - 1][y][x].get_possible_tiles).intersection(block.get_tile().get_down_set()))
+
+        # z + 1 (Up)
+        if is_block_inbounds(x, y, z + 1) and not board[z + 1][y][x].is_tiled():
+            board[z + 1][y][x].set_possible_tiles((board[z + 1][y][x].get_possible_tiles).intersection(block.get_tile().get_up_set()))
+
+def is_block_inbounds(x, y, z):
+    return x < X and y < Y and z < Z
 
 def main():
-    board = [["X"] * 3] * 3
-    # Coordinate for tileable block located at (x, y, z) is board[z][y][x]
+    # TODO: Board is a 3d array of Block objects. Block objects are initialized with tile type None and with possible tile set of all tiles
+    board = [[Block()] * 3] * 3
     tile_1 = Tile("tile_1")
     tile_2 = Tile("tile_2")
-    tile_1.add_to_set("left", ["tile_1, tile_2"])
+    tile_1.add_to_set("west", ["tile_1, tile_2"])
 
     for row in board:
         print(*row)
