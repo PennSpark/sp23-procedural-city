@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 # Tile refers to general tile types
 # Block refers to an individual block in the x by y by z board. Each block may be untiled or tiled.
 # Coordinate for tileable block located at (x, y, z) is board[z][y][x]
@@ -12,6 +13,17 @@
 
 # Global variables for board dimensions
 X, Y, Z = 3, 3, 3
+=======
+import heapq
+
+class Board:
+    def __init__(self, i, j, k, tiles):
+        self.board = [[[""] * i ] * j ] * k
+        self.block_heap = []
+        for i, j, k in range(i), range(j), range(k):
+            heapq.heappush(self.block_heap, ((i, j, k), tiles.size()))
+
+>>>>>>> Stashed changes
 
 class Tile:
     # Define tile name, initialize empty direction sets
@@ -23,6 +35,12 @@ class Tile:
         self.south_set = set()
         self.up_set = set()
         self.down_set = set()
+<<<<<<< Updated upstream
+=======
+        self.front_set = set()
+        self.back_set = set()
+
+>>>>>>> Stashed changes
     
     # Add list of tiles to a direction set
     def add_to_set(self, dir, list):
@@ -65,9 +83,21 @@ class Block:
         # TODO: initialize this to the set of all tiles once that is implemented
         self._possible_tiles = [Tile("tile_1"), Tile("tile_2")]
 
+<<<<<<< Updated upstream
     # Check if block is tiled
     def is_tiled(self):
         return self._tile != None
+=======
+def choice():
+
+    pass
+    #logic assumes this is an open tile, otherwise just pass (shouldn't have to deal with this case)
+    #start with list of every tile (can be a set)
+    #intersect it corresponding set of neighbors (for example, intersect with right_set of left neighbor)
+    #if the remaining set is empty, then WFC again from scratch
+    #otherwise, choose a random tile from the set and place it in the position
+    #too tired to write this rn, we can talk about it at meeting
+>>>>>>> Stashed changes
 
     # Returns number of possible tiles in current block
     def num_possible_tiles(self):
