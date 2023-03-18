@@ -1,6 +1,8 @@
 import heapq
 from tile import Tile
 from block import Block
+import random
+import maya.cmds as cmds
 
 # Tile refers to general tile types
 # Block refers to an individual block in the x by y by z board. Each block may be untiled or tiled.
@@ -23,6 +25,17 @@ class Board:
                 for k in range(Z):
                     heapq.heappush(self.block_heap, (len(tiles), (i, j, k)))
         # print(self.block_heap)
+    
+    def print_board(self):
+        for slice in self.board:
+            for row in slice:
+                tile_row = map(Block.get_tile,row)
+                name_row = map(Tile.getTileName, tile_row)
+                print(*name_row)
+
+    def place_tile(self, tile, x, y, z):
+        cmds.duplicate(f"{tile._name}")
+        cmds.move(x+1, y+1, z+1)
 
     def choice(self, x, y, z):
         block = self.board[z][y][x]
@@ -37,8 +50,9 @@ class Board:
             return
         
         # For now just pick tile at index 0, TODO: add probability distribution for pick
-        tile_placed = block.get_possible_tiles().pop()
+        tile_placed = random.choice(list(block.get_possible_tiles()))
         block.set_tile(tile_placed)
+        self.place_tile(tile_placed, x, y, z)
         print("Placed tile " + tile_placed.getTileName() + " at block " + str((x, y, z)))
 
         # Update neighbors' possible tiles
@@ -72,14 +86,21 @@ class Board:
 
 def main():
     # TODO: Board is a 3d array of Block objects. Block objects are initialized with tile type None and with possible tile set of all tiles
-    tile_1 = Tile("tile_type_1")
-    tile_2 = Tile("tile_type_2")
-    tile_1.add_to_set("west", [tile_1, tile_2])
+    tile_1 = Tile("Tile1")
+    tile_2 = Tile("Tile2")
+    dirs = ["north", "south", "east", "west", "up", "down"]
+    for dir in dirs:
+        tile_1.add_to_set(dir, [tile_1, tile_2])
+        tile_2.add_to_set(dir, [tile_1, tile_2])
     board = Board(3, 3, 3, set([tile_1, tile_2]))
 
     while len(board.block_heap) != 0:
         next_block = heapq.heappop(board.block_heap)
         board.choice(next_block[1][2], next_block[1][1], next_block[1][0])
+    
+    board.print_board()
+    
+    
 
 if __name__ == "__main__":
     main()
