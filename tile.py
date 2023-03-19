@@ -65,6 +65,8 @@ class Tile:
         for i in range(6):
             j = Tile.dir_map[i]
             if faces_1[i] == faces_2[j]:
+                print(f"Tile 1 ({Tile.name_map[i]}): {faces_1[i]}")
+                print(f"Tile 2 ({Tile.name_map[j]}): {faces_2[j]}")
                 tile1.add_to_set(Tile.name_map[i], [tile2])
             
     def remove_from_set(self, dir, item):

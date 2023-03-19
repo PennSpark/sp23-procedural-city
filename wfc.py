@@ -41,7 +41,7 @@ class Board:
         pass
         #cmds.duplicate(f"{tile.name}", n=f"{tile.name}_{x}{y}{z}")
         #cmds.select(f"{tile.name}_{x}{y}{z}")
-        #cmds.move(x, y, z)
+        #cmds.move(x+1, y+1, z+1)
         #cmds.select("Tile1")
     
     def render_tiles(self):
@@ -50,7 +50,7 @@ class Board:
             self.place_tile(obj[0], obj[1], obj[2], obj[3])
 
     def choice(self, x, y, z):
-        print("{}, {}, {}".format(x, y, z))
+        #print("{}, {}, {}".format(x, y, z))
         block = self.board[z][y][x]
 
         if block.is_tiled():
@@ -117,17 +117,15 @@ def main():
             Tile.generate_sets(tiles[i], tiles[j])
     #for tile in tiles:
     #    tile.print_sets()
-    board = Board(1, 1, 3, set(tiles))
+    board = Board(3, 1, 3, set(tiles))
 
     while len(board.block_heap) != 0:
         next_block = heapq.heappop(board.block_heap)
-        print(next_block[1])
         if board.choice(next_block[1][2], next_block[1][1], next_block[1][0]):
-            board = Board(1, 1, 3, set(tiles))
+            board = Board(3, 1, 3, set(tiles))
     
     board.print_board()
     board.render_tiles()
-    
     
 
 if __name__ == "__main__":
