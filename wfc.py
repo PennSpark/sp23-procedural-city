@@ -18,7 +18,7 @@ import random
 
 class Board:
     def __init__(self, X, Y, Z, tiles):
-        self.board = [[[Block(tiles.copy()) for i in range(X) ] for i in range(Y)] for i in range(Z)]
+        self.board = [[[Block(tiles.copy(), (x,y,z)) for x in range(X) ] for y in range(Y)] for z in range(Z)]
         self.block_heap = []
         self.render_stack = []
         for i in range(Z): 
@@ -33,6 +33,20 @@ class Board:
                 tile_row = map(Block.get_tile,row)
                 name_row = map(Tile.getTileName, tile_row)
                 print(*name_row)
+    
+    def print_board_possibility(self):
+        for slice in self.board:
+            for row in slice:
+                poss_row = map(Block.get_possible_tiles,row)
+                count_row = map(len, poss_row)
+                print(*count_row)
+
+    def print_board_coord(self):
+        for slice in self.board:
+            for row in slice:
+                coord_row = map(Block.get_coord,row)
+                print(*coord_row)
+
 
     def push_tile(self, tile, x, y, z):
         self.render_stack.append((tile, x, y, z))
@@ -48,6 +62,9 @@ class Board:
         while self.render_stack:
             obj = self.render_stack.pop()
             self.place_tile(obj[0], obj[1], obj[2], obj[3])
+
+    def is_block_inbounds(self, x, y, z):
+        return x < len(self.board[0][0]) and y < len(self.board[0]) and z < len(self.board) and x > -1 and y > -1 and z > -1
 
     def choice(self, x, y, z):
         #print("{}, {}, {}".format(x, y, z))
@@ -77,26 +94,25 @@ class Board:
         if self.is_block_inbounds(x + 1, y, z) and not self.board[z][y][x + 1].is_tiled():
             self.board[z][y][x + 1].set_possible_tiles((self.board[z][y][x + 1].get_possible_tiles()).intersection(block.get_tile().get_set("east")))
 
-        # y - 1 (North)
+        # y - 1 (Up)
         if self.is_block_inbounds(x, y - 1, z) and not self.board[z][y - 1][x].is_tiled():
-            self.board[z][y - 1][x].set_possible_tiles((self.board[z][y - 1][x].get_possible_tiles()).intersection(block.get_tile().get_set("north")))
+            self.board[z][y - 1][x].set_possible_tiles((self.board[z][y - 1][x].get_possible_tiles()).intersection(block.get_tile().get_set("down")))
 
-        # y + 1 (South)
+        # y + 1 (Down)
         if self.is_block_inbounds(x, y + 1, z) and not self.board[z][y + 1][x].is_tiled():
-            self.board[z][y + 1][x].set_possible_tiles((self.board[z][y + 1][x].get_possible_tiles()).intersection(block.get_tile().get_set("south")))
+            print("south")
+            print(self.board[z][y+1][x].get_coord())
+            self.board[z][y + 1][x].set_possible_tiles((self.board[z][y + 1][x].get_possible_tiles()).intersection(block.get_tile().get_set("up")))
 
-        # z - 1 (Down)
+        # z - 1 (South)
         if self.is_block_inbounds(x, y, z - 1) and not self.board[z - 1][y][x].is_tiled():
-            self.board[z - 1][y][x].set_possible_tiles((self.board[z - 1][y][x].get_possible_tiles()).intersection(block.get_tile().get_set("down")))
+            self.board[z+1][y][x].set_possible_tiles((self.board[z - 1][y][x].get_possible_tiles()).intersection(block.get_tile().get_set("south")))
 
-        # z + 1 (Up)
+        # z + 1 (North)
         if self.is_block_inbounds(x, y, z + 1) and not self.board[z + 1][y][x].is_tiled():
-            self.board[z + 1][y][x].set_possible_tiles((self.board[z + 1][y][x].get_possible_tiles()).intersection(block.get_tile().get_set("up")))
+            self.board[z + 1][y][x].set_possible_tiles((self.board[z + 1][y][x].get_possible_tiles()).intersection(block.get_tile().get_set("north")))
         
         return 0
-
-    def is_block_inbounds(self, x, y, z):
-        return x < len(self.board[0][0]) and y < len(self.board[0]) and z < len(self.board)
     
 
 def main():
@@ -127,6 +143,8 @@ def main():
     board.print_board()
     board.render_tiles()
     
+    print(list(map(Tile.getTileName, tile_5.get_set("up"))))
+    print(list(map(Tile.getTileName, tile_9.get_set("down"))))
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,6 @@
 class Block:
-    def __init__(self, possible_tiles, tile = None):
+    def __init__(self, possible_tiles, coord, tile = None):
+        self._coord = coord
         self._tile = tile
         # TODO: initialize this to the set of all tiles once that is implemented
         self._possible_tiles = possible_tiles
@@ -18,6 +19,9 @@ class Block:
 
     def set_tile(self, tile):
         self._tile = tile
+
+    def get_coord(self):
+        return self._coord
 
     def get_possible_tiles(self):
         return self._possible_tiles
