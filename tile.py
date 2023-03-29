@@ -3,7 +3,7 @@ class Tile:
     vals = [1, 0, 3, 2, 5, 4]
     rotated_cw = [0, 1, 4, 5, 3, 2]
     names = ["up", "down", "west", "east", "north", "south"]
-    dir_map = dict(zip(keys, vals))
+    opposite_dir = dict(zip(keys, vals))
     index_to_name = dict(zip(keys, names))
     name_to_index = dict(zip(names, keys))
 
@@ -17,33 +17,37 @@ class Tile:
     def getTileName(self):
         return self.name
     
-    # Add list of tiles to a direction set
     def get_set(self, dir):
+        """Get a tile set from direction string"""
         index = Tile.name_to_index.get(dir)
         if index == None:
             raise Exception("invalid direction")
         return self.sets[index]
-            
+    
     def add_to_set(self, dir, list):
+        """Add list of tiles to a direction set"""
         set = self.get_set(dir)
         set.update(list)
-    
+
     def print_sets(self):
         print(self.name)
         for idx, set in enumerate(self.sets):
             print(f"{Tile.index_to_name[idx]}: {list(map(Tile.getTileName, list(set)))}")
 
+    # NOTE: We have to call this between all pairs AFTER generating rotations.
     def generate_sets(tile1, tile2):
+        """Add all possible adjacency rules using tile2 to tile1 sets, with locked rotation"""
         faces_1 = tile1.faces
         faces_2 = tile2.faces
         for i in range(6):
-            j = Tile.dir_map[i]
+            j = Tile.opposite_dir[i]
             if faces_1[i] == faces_2[j]:
                 #print(f"Tile 1 ({Tile.index_to_name[i]}): {faces_1[i]}")
                 #print(f"Tile 2 ({Tile.index_to_name[j]}): {faces_2[j]}")
                 tile1.add_to_set(Tile.index_to_name[i], [tile2])
 
     def create_rotations(tile):
+        """Generate 3 more rotations of a tile, and return a tuple with all 4"""
         out_list = [tile]
         for _ in range(2):
             last_rot = out_list[-1]
