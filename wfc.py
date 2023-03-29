@@ -67,6 +67,15 @@ class Board:
     def is_block_inbounds(self, x, y, z):
         return x < len(self.board[0][0]) and y < len(self.board[0]) and z < len(self.board) and x > -1 and y > -1 and z > -1
 
+    direction_offsets = [
+        ("west", (-1, 0, 0)),
+        ("east", (1, 0, 0)),
+        ("north", (0, 0, -1)),
+        ("south", (0, 0, 1)),
+        ("down", (0, -1, 0)),
+        ("up", (0, 1, 0)),
+    ]
+
     def collapse(self, x, y, z):
         #print("{}, {}, {}".format(x, y, z))
         block = self.board[z][y][x]
@@ -87,31 +96,13 @@ class Board:
         print("Placed tile " + tile_placed.getTileName() + " at block " + str((x, y, z)))
 
         # Update neighbors' possible tiles
-            # x - 1 (West)
-        if self.is_block_inbounds(x - 1, y, z) and not self.board[z][y][x - 1].is_tiled():
-            self.board[z][y][x - 1].set_possible_tiles((self.board[z][y][x - 1].get_possible_tiles()).intersection(block.get_tile().get_set("west")))
-
-        # x + 1 (East)
-        if self.is_block_inbounds(x + 1, y, z) and not self.board[z][y][x + 1].is_tiled():
-            self.board[z][y][x + 1].set_possible_tiles((self.board[z][y][x + 1].get_possible_tiles()).intersection(block.get_tile().get_set("east")))
-
-        # y - 1 (Up)
-        if self.is_block_inbounds(x, y - 1, z) and not self.board[z][y - 1][x].is_tiled():
-            self.board[z][y - 1][x].set_possible_tiles((self.board[z][y - 1][x].get_possible_tiles()).intersection(block.get_tile().get_set("down")))
-
-        # y + 1 (Down)
-        if self.is_block_inbounds(x, y + 1, z) and not self.board[z][y + 1][x].is_tiled():
-            print("south")
-            print(self.board[z][y+1][x].get_coord())
-            self.board[z][y + 1][x].set_possible_tiles((self.board[z][y + 1][x].get_possible_tiles()).intersection(block.get_tile().get_set("up")))
-
-        # z - 1 (South)
-        if self.is_block_inbounds(x, y, z - 1) and not self.board[z - 1][y][x].is_tiled():
-            self.board[z+1][y][x].set_possible_tiles((self.board[z - 1][y][x].get_possible_tiles()).intersection(block.get_tile().get_set("south")))
-
-        # z + 1 (North)
-        if self.is_block_inbounds(x, y, z + 1) and not self.board[z + 1][y][x].is_tiled():
-            self.board[z + 1][y][x].set_possible_tiles((self.board[z + 1][y][x].get_possible_tiles()).intersection(block.get_tile().get_set("north")))
+        for dir, (dx, dy, dz) in Board.direction_offsets:
+            # bounds check
+            if not self.is_block_inbounds(x - 1, y, z): continue
+            neighbor = self.board[x + dx][y + dy][z + dz]
+            # we dont care if neighbor already locked in
+            if neighbor.is_tiled(): continue
+            neighbor.set_possible_tiles((neighbor.get_possible_tiles()).intersection(block.get_tile().get_set(dir)))
         
         return 0
     
