@@ -11,10 +11,10 @@ import random
 # Directions
 # West: -x
 # East: +x
-# North: -y
-# South: +y
-# Up: +z
-# Down: -z
+# North: -z
+# South: +z
+# Up: +y
+# Down: -y
 
 class Board:
     def __init__(self, X, Y, Z, tiles):
@@ -30,21 +30,21 @@ class Board:
     def print_board(self):
         for slice in self.board:
             for row in slice:
-                tile_row = map(Block.get_tile,row)
+                tile_row = map(Block.get_tile, row)
                 name_row = map(Tile.getTileName, tile_row)
                 print(*name_row)
     
     def print_board_possibility(self):
         for slice in self.board:
             for row in slice:
-                poss_row = map(Block.get_possible_tiles,row)
+                poss_row = map(Block.get_possible_tiles, row)
                 count_row = map(len, poss_row)
                 print(*count_row)
 
     def print_board_coord(self):
         for slice in self.board:
             for row in slice:
-                coord_row = map(Block.get_coord,row)
+                coord_row = map(Block.get_coord, row)
                 print(*coord_row)
 
 
@@ -54,6 +54,7 @@ class Board:
     def place_tile(self, tile, x, y, z):
         pass
         #cmds.duplicate(f"{tile.name}", n=f"{tile.name}_{x}{y}{z}")
+        # TODO: rotate the tile based on rotation * 90deg
         #cmds.select(f"{tile.name}_{x}{y}{z}")
         #cmds.move(x+1, y+1, z+1)
         #cmds.select("Tile1")
@@ -66,7 +67,7 @@ class Board:
     def is_block_inbounds(self, x, y, z):
         return x < len(self.board[0][0]) and y < len(self.board[0]) and z < len(self.board) and x > -1 and y > -1 and z > -1
 
-    def choice(self, x, y, z):
+    def collapse(self, x, y, z):
         #print("{}, {}, {}".format(x, y, z))
         block = self.board[z][y][x]
 
@@ -178,7 +179,7 @@ def main():
 
     while len(board.block_heap) != 0:
         next_block = heapq.heappop(board.block_heap)
-        if board.choice(next_block[1][2], next_block[1][1], next_block[1][0]):
+        if board.collapse(next_block[1][2], next_block[1][1], next_block[1][0]):
             board = Board(3, 1, 3, set(tiles))
     
     board.print_board()
@@ -189,4 +190,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
