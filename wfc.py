@@ -118,68 +118,35 @@ class Board:
 def main():
     # TODO: Board is a 3d array of Block objects. Block objects are initialized with tile type None and with possible tile set of all tiles
     # Tile(name, [up, down, west, east, north, south])
-    tile_1 = Tile("Tile1", ['Circle','Circle','Circle','Circle','Circle','Circle'])
-    tile_2 = Tile("Tile2", ['Square','Square','Square','Square','Square','Square'])
-    tile_3 = Tile("Tile3", ['Octogon','Octogon','Octogon','Octogon','Octogon','Octogon'])
-    tile_4 = Tile("Tile4", ['Circle','Octogon','Circle','Octogon','Square','Square'])
-    tile_5 = Tile("Tile5", ['Octogon','Square','Circle','Square','Octogon','Circle'])
-    tile_6 = Tile("Tile6", ['Octogon','Square','Octogon','Circle','Octogon','Circle'])
-    tile_7 = Tile("Tile7", ['Circle','Octogon','Octogon','Circle','Square','Circle'])
-    tile_8 = Tile("Tile8", ['Square','Octogon','Circle','Octogon','Octogon','Circle'])
-    tile_9 = Tile("Tile9", ['Square','Circle','Square','Square','Circle','Octogon'])
-    tile_10 = Tile("Tile10", ['Circle','Circle','Square','Square','Circle','Square'])
 
     # tiles on https://docs.google.com/spreadsheets/d/126zAezKKaoGMzls38S5Fy72Ctz77F2zn7gWG4wSsJe0/edit?usp=sharing
-    BuildingBody_AnyFloor_V1 = Tile("BuildingBody_AnyFloor_V1", ['BuildingTop','BuildingBottom','BuildingSide','BuildingSide','BuildingSide','BuildingSide'])
-    BuildingBody_AnyFloor_V2 = Tile("BuildingBody_AnyFloor_V2", ['BuildingTop','BuildingBottom','BuildingSide','BuildingSide','BuildingSide','BuildingSide'])
-    BuildingBody_AnyFloor_V3 = Tile("BuildingBody_AnyFloor_V3", ['BuildingTop','BuildingBottom','BuildingSide','BuildingSide','BuildingSide','BuildingSide'])
-    BuildingBody_GroundFloor_V1 = Tile("BuildingBody_GroundFloor_V1", ['BuildingTop','GroundTopBottom','BuildingSide','BuildingSide','BuildingSide','BuildingSide'])
-    BuildingBody_GroundFloor_V2 = Tile("BuildingBody_GroundFloor_V2", ['BuildingTop','GroundTopBottom','BuildingSide','BuildingSide','BuildingSide','BuildingSide'])
-    SmallRoof_V1 = Tile("SmallRoof_V1", ['Empty','BuildingTop','Empty','Empty','SmallRoof','SmallRoof'])
-    SmallRoofCorner_V1 = Tile("SmallRoofCorner_V1", ['Empty','BuildingTop','SmallRoof','Empty','SmallRoof','Empty'])
-    Path_Straight_V1 = Tile("Path_Straight_V1", ['Empty','Empty','GroundSide','GroundSide','Path','Path'])
-    Path_Corner_V1 = Tile("Path_Corner_V1", ['Empty','Empty','Path','GroundSide','Path','GroundSide'])
-    Path_Branch_V1 = Tile("Path_Branch_V1", ['Empty','Empty','Empty','Empty','Empty','GroundSide'])
-    Staircase_V1 = Tile("Staircase_V1", ['Empty','GroundTopBottom','Empty, GroundSide','Empty, GroundSide','Path, GroundSide','Path, GroundSide'])
-    Pillar_Vertical_V1 = Tile("Pillar_Vertical_V1", ['BuildingBottom','GroundTopBottom','Empty, BuildingSide','Empty, BuildingSide','Empty','BuildingSide'])
-    Pillar_Diagonal_V1 = Tile("Pillar_Diagonal_V1", ['BuildingBottom','Empty, GroundTopBottom','Empty, BuildingSide','Empty, BuildingSide','Empty','BuildingSide'])
-    Balcony_V1 = Tile("Balcony_V1", ['Empty','Ground','Empty, BuildingSide','Empty, BuildingSide','Empty','BuildingSide'])
-    Path_Railing_V1 = Tile("Path_Railing_V1", ['Empty','Empty','GroundSide','GroundSide','Path','Path'])
-    Dock_V1 = Tile("Dock_V1", ['Empty','Ground','Empty','Empty','Empty','BuildingSide'])
-    Ground_V1 = Tile("Ground_V1", ['BuildingBottom, GroundTopBottom, Empty','Empty','GroundSide','GroundSide','GroundSide','GroundSide'])
-    Empty = Tile("Empty", ['Empty','GroundTopBottom, Path, Empty','ANY','ANY','ANY','ANY'])
-    BigRoofBottomFront_R = Tile("BigRoofBottomFront_R", ['BRFrontRight','BuildingTop','BRBottomFront','Empty','Empty','BRBottomRight'])
-    BigRoofBottomFront_L = Tile("BigRoofBottomFront_L", ['BRFrontLeft','BuildingTop','Empty','BRBottomFront','Empty','BRBottomLeft'])
-    BigRoofBottomBack_R = Tile("BigRoofBottomBack_R", ['BRBackRight','BuildingTop','BRBottomBack','Empty','BRBottomRight','Empty'])
-    BigRoofBottomBack_L = Tile("BigRoofBottomBack_L", ['BRBackLeft','BuildingTop','Empty','BRBottomBack','BRBottomLeft','Empty'])
-    BigRoofBottomMiddle_R = Tile("BigRoofBottomMiddle_R", ['BRMiddleRight','BuildingTop','BRBottomMiddle','Empty','BRBottomRight','BRBottomRight'])
-    BigRoofBottomMiddle_L = Tile("BigRoofBottomMiddle_L", ['BRMiddleLeft','BuildingTop','Empty','BRBottomMiddle','BRBottomLeft','BRBottomLeft'])
-    BigRoofTopFront_R = Tile("BigRoofTopFront_R", ['Empty','BRFrontRight','BRTopFront','Empty','Empty','BRTopRight'])
-    BigRoofTopFront_L = Tile("BigRoofTopFront_L", ['Empty','BRFrontLeft','Empty','BRTopFront','Empty','BRTopLeft'])
-    BigRoofTopBack_R = Tile("BigRoofTopBack_R", ['Empty','BRBackRight','BRTopBack','Empty','BRTopRight','Empty'])
-    BigRoofTopBack_L = Tile("BigRoofTopBack_L", ['Empty','BRBackLeft','Empty','BRTopBack','BRTopLeft','Empty'])
-    BigRoofTopMiddle_R = Tile("BigRoofTopMiddle_R", ['Empty','BRMiddleRight','BRTopMiddle','Empty','BRTopRight','BRTopRight'])
-    BigRoofTopMiddle_L = Tile("BigRoofTopMiddle_L", ['Empty','BRMiddleLeft','Empty','BRTopMiddle','BRTopLeft','BRTopLeft'])
+    Building_Any = Tile("Building_Any", [set(['BuildingWBuilding', 'Empty']), set(['BuildingWGround']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty'])])
+    Building_Wall = Tile("Building_Wall", [set(['BuildingWBuilding', 'Empty']), set(['BuildingWGround']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['Empty']), set(['BuildingWBuilding', 'Empty'])])
+    Building_TopFloor = Tile("Building_TopFloor", [set(['Empty']), set(['BuildingWGround']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty'])])
+    Building_Corner = Tile("Building_Corner", [set(['BuildingWBuilding','Empty']), set(['BuildingWGround']), set(['BuildingWBuilding', 'Empty']), set(['Empty']), set(['Empty']), set(['BuildingWBuilding', 'Empty'])])
+    Building_Door = Tile("Building_Door", [set(['BuildingWBuilding','Empty']), set(['BuildingWGround']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['Path']), set(['BuildingWBuilding', 'Empty'])])
+    Path_Straight = Tile("Path_Straight", [set(['Empty']), set(['Empty']), set(['Ground']), set(['Ground']), set(['Path']), set(['Path'])])
+    Path_Corner = Tile("Path_Corner", [set(['Empty']), set(['Empty']), set(['Path']), set(['Ground']), set(['Path']), set(['Ground'])])   
+    Path_Branch = Tile("Path_Branch", [set(['Empty']), set(['Empty']), set(['Path']), set(['Path']), set(['Path']), set(['Ground'])])
+    Stairs = Tile("Stairs", [set(['Empty']), set(['Ground']), set(['Empty', 'Ground']), set(['Empty', 'Ground']), set(['Path']), set(['EmptyWPathUnder'])])
+    Ground = Tile("Ground", [set(['Empty', 'BuildingWGround', 'Ground']), set(['N/A']), set(['Ground']), set(['Ground']), set(['Ground']), set(['Ground'])])
+    Empty = Tile("Empty", [set(['Empty']), set(['Empty']), set(['Empty']), set(['Empty']), set(['Empty']), set(['Empty'])])
+    Empty_2 = Tile("Empty_2", [set(['Empty']), set(['Path']), set(['EmptyWPathUnder', 'BuildingWBuilding', 'BuildingWGround', 'Ground', 'Path']), set(['EmptyWPathUnder', 'BuildingWBuilding', 'BuildingWGround', 'Ground', 'Path']), set(['EmptyWPathUnder']), set(['EmptyWPathUnder', 'BuildingWBuilding', 'BuildingWGround', 'Ground', 'Path'])])         
 
     # tiles = [tile_1, tile_2, tile_3, tile_4, tile_5, tile_6, tile_7, tile_8, tile_9, tile_10]
-    tiles = [BuildingBody_AnyFloor_V1, BuildingBody_AnyFloor_V2, BuildingBody_AnyFloor_V3, BuildingBody_GroundFloor_V1, 
-    BuildingBody_GroundFloor_V2, SmallRoof_V1, SmallRoofCorner_V1, Path_Straight_V1, Path_Corner_V1, Path_Branch_V1, 
-    Staircase_V1, Pillar_Vertical_V1, Pillar_Diagonal_V1, Balcony_V1, Path_Railing_V1, Dock_V1, Ground_V1, Empty,
-    BigRoofBottomFront_R, BigRoofBottomFront_L, BigRoofBottomBack_R, BigRoofBottomBack_L, BigRoofBottomMiddle_R,
-    BigRoofBottomMiddle_L, BigRoofTopFront_R, BigRoofTopFront_L, BigRoofTopBack_R, BigRoofTopBack_L, BigRoofTopMiddle_R,
-    BigRoofTopMiddle_L]
+    tiles = [Building_Any, Building_Wall, Building_TopFloor, Building_Corner, Building_Door, Path_Straight, Path_Corner, Path_Branch, Stairs, Ground, Empty, Empty_2]
 
-    for i in range (10):
-        for j in range(10):
+    for i in range (len(tiles)):
+        for j in range(len(tiles)):
             Tile.generate_sets(tiles[i], tiles[j])
     #for tile in tiles:
     #    tile.print_sets()
-    board = Board(3, 1, 3, set(tiles))
+    board = Board(3, 3, 3, set(tiles))
 
     while len(board.block_heap) != 0:
         next_block = heapq.heappop(board.block_heap)
         if board.choice(next_block[1][2], next_block[1][1], next_block[1][0]):
-            board = Board(3, 1, 3, set(tiles))
+            board = Board(3, 3, 3, set(tiles))
     
     board.print_board()
     board.render_tiles()
