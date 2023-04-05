@@ -1,6 +1,6 @@
-import heapq
 from tile import Tile
 from block import Block
+import heapq
 import random
 #import maya.cmds as cmds
 
@@ -52,12 +52,12 @@ class Board:
         self.render_stack.append((tile, x, y, z))
 
     def place_tile(self, tile, x, y, z):
+        if tile.maya_name == 'Empty': pass
         pass
         #cmds.duplicate(f"{tile.name}", n=f"{tile.name}_{x}{y}{z}")
-        # TODO: rotate the tile based on rotation * 90deg
         #cmds.select(f"{tile.name}_{x}{y}{z}")
+        #cmds.rotate(0, tile.rotation*90, 0)
         #cmds.move(x+1, y+1, z+1)
-        #cmds.select("Tile1")
     
     def render_tiles(self):
         while self.render_stack:
@@ -123,10 +123,14 @@ def main():
     Stairs = Tile("Stairs", 0, [set(['Empty']), set(['Ground']), set(['Empty', 'Ground']), set(['Empty', 'Ground']), set(['Path']), set(['EmptyWPathUnder'])])
     Ground = Tile("Ground", 0, [set(['Empty', 'BuildingWGround', 'Ground']), set(['N/A']), set(['Ground']), set(['Ground']), set(['Ground']), set(['Ground'])])
     Empty = Tile("Empty", 0, [set(['Empty']), set(['Empty']), set(['Empty']), set(['Empty']), set(['Empty']), set(['Empty'])])
-    Empty_2 = Tile("Empty_2", 0, [set(['Empty']), set(['Path']), set(['EmptyWPathUnder', 'BuildingWBuilding', 'BuildingWGround', 'Ground', 'Path']), set(['EmptyWPathUnder', 'BuildingWBuilding', 'BuildingWGround', 'Ground', 'Path']), set(['EmptyWPathUnder']), set(['EmptyWPathUnder', 'BuildingWBuilding', 'BuildingWGround', 'Ground', 'Path'])])         
+    Empty_2 = Tile("Empty", 0, [set(['Empty']), set(['Path']), set(['EmptyWPathUnder', 'BuildingWBuilding', 'BuildingWGround', 'Ground', 'Path']), set(['EmptyWPathUnder', 'BuildingWBuilding', 'BuildingWGround', 'Ground', 'Path']), set(['EmptyWPathUnder']), set(['EmptyWPathUnder', 'BuildingWBuilding', 'BuildingWGround', 'Ground', 'Path'])])         
 
     # tiles = [tile_1, tile_2, tile_3, tile_4, tile_5, tile_6, tile_7, tile_8, tile_9, tile_10]
-    tiles = [Building_Any, Building_Wall, Building_TopFloor, Building_Corner, Building_Door, Path_Straight, Path_Corner, Path_Branch, Stairs, Ground, Empty, Empty_2]
+    tiles_norot = [Building_Any, Building_Wall, Building_TopFloor, Building_Corner, Building_Door, Path_Straight, Path_Corner, Path_Branch, Stairs, Ground, Empty, Empty_2]
+    tiles = []
+
+    for tile in tiles_norot:
+        tiles.extend(Tile.create_rotations(tile))
 
     for i in range (len(tiles)):
         for j in range(len(tiles)):

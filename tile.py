@@ -9,8 +9,9 @@ class Tile:
 
     # Define tile name, initialize empty direction sets
     def __init__(self, name, rotation, faces = [[""], [""], [""], [""], [""], [""]]):
-        self.name = name
-        self.rotation = rotation;
+        self.maya_name = name
+        self.name = f'{name}_{rotation}'
+        self.rotation = rotation
         self.faces = faces
         self.sets = [set() for _ in range(6)]
     
@@ -47,19 +48,19 @@ class Tile:
                 tile1.add_to_set(Tile.index_to_name[i], [tile2])
 
     def create_rotations(tile):
-        """Generate 3 more rotations of a tile, and return a tuple with all 4"""
+        """Generate 3 more rotations of a tile, and return a list with all 4"""
         out_list = [tile]
-        for _ in range(2):
+        for _ in range(3):
             last_rot = out_list[-1]
 
-            face_sets = []
+            faces = []
             for f in range(6):
                 # TODO: make sure this goes the right direction
-                face_sets.append(last_rot.sets[Tile.rotated_cw[f]])
+                faces.append(last_rot.faces[Tile.rotated_cw[f]])
             
-            out_list.append(Tile(tile.name, (last_rot.rotation + 1) % 4, face_sets))
+            out_list.append(Tile(tile.maya_name, (last_rot.rotation + 1) % 4, faces))
             
-        return (out_list[0], out_list[1], out_list[2], out_list[3])
+        return out_list
                             
             
     def remove_from_set(self, dir, item):
