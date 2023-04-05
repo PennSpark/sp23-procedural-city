@@ -1,87 +1,67 @@
 class Tile:
     keys = [0, 1, 2, 3, 4, 5]
     vals = [1, 0, 3, 2, 5, 4]
+    rotated_cw = [0, 1, 4, 5, 3, 2]
     names = ["up", "down", "west", "east", "north", "south"]
-    dir_map = dict(zip(keys, vals))
-    name_map = dict(zip(keys, names))
+    opposite_dir = dict(zip(keys, vals))
+    index_to_name = dict(zip(keys, names))
+    name_to_index = dict(zip(names, keys))
+
     # Define tile name, initialize empty direction sets
-    def __init__(self, name, faces = [[""], [""], [""], [""], [""], [""]]):
+    def __init__(self, name, rotation, faces = [[""], [""], [""], [""], [""], [""]]):
         self.name = name
+        self.rotation = rotation;
         self.faces = faces
-        self.west_set = set()
-        self.east_set = set()
-        self.north_set = set()
-        self.south_set = set()
-        self.up_set = set()
-        self.down_set = set()
-        self.sets = [self.up_set, self.down_set, self.west_set, self.east_set, self.north_set, self.south_set]
+        self.sets = [set() for _ in range(6)]
     
     def getTileName(self):
         return self.name
     
-    # Add list of tiles to a direction set
     def get_set(self, dir):
-        if dir == "west":
-            return self.west_set
-        elif dir == "east":
-            return self.east_set
-        elif dir == "north":
-            return self.north_set
-        elif dir == "south":
-            return self.south_set
-        elif dir == "up":
-            return self.up_set
-        elif dir == "down":
-            return self.down_set
-        else:
+        """Get a tile set from direction string"""
+        index = Tile.name_to_index.get(dir)
+        if index == None:
             raise Exception("invalid direction")
-            
-    def add_to_set(self, dir, list):
-        if dir == "west":
-            self.west_set.update(list)
-        elif dir == "east":
-            self.east_set.update(list)
-        elif dir == "north":
-            self.north_set.update(list)
-        elif dir == "south":
-            self.south_set.update(list)
-        elif dir == "up":
-            self.up_set.update(list)
-        elif dir == "down":
-            self.down_set.update(list)
-        else:
-            raise Exception("invalid direction")
+        return self.sets[index]
     
+    def add_to_set(self, dir, list):
+        """Add list of tiles to a direction set"""
+        set = self.get_set(dir)
+        set.update(list)
+
     def print_sets(self):
         print(self.name)
         for idx, set in enumerate(self.sets):
-            print(f"{Tile.name_map[idx]}: {list(map(Tile.getTileName, list(set)))}")
+            print(f"{Tile.index_to_name[idx]}: {list(map(Tile.getTileName, list(set)))}")
 
-        
-    
+    # NOTE: We have to call this between all pairs AFTER generating rotations.
     def generate_sets(tile1, tile2):
+        """Add all possible adjacency rules using tile2 to tile1 sets, with locked rotation"""
         faces_1 = tile1.faces
         faces_2 = tile2.faces
         for i in range(6):
-            j = Tile.dir_map[i]
+            j = Tile.opposite_dir[i]
             if faces_1[i].intersection(faces_2[j]):
                 #print(f"Tile 1 ({Tile.name_map[i]}): {faces_1[i]}")
                 #print(f"Tile 2 ({Tile.name_map[j]}): {faces_2[j]}")
-                tile1.add_to_set(Tile.name_map[i], [tile2])
+                tile1.add_to_set(Tile.index_to_name[i], [tile2])
+
+    def create_rotations(tile):
+        """Generate 3 more rotations of a tile, and return a tuple with all 4"""
+        out_list = [tile]
+        for _ in range(2):
+            last_rot = out_list[-1]
+
+            face_sets = []
+            for f in range(6):
+                # TODO: make sure this goes the right direction
+                face_sets.append(last_rot.sets[Tile.rotated_cw[f]])
+            
+            out_list.append(Tile(tile.name, (last_rot.rotation + 1) % 4, face_sets))
+            
+        return (out_list[0], out_list[1], out_list[2], out_list[3])
+                            
             
     def remove_from_set(self, dir, item):
-        if dir == "west":
-            self.west_set.remove(item)
-        elif dir == "east":
-            self.east_set.remove(item)
-        elif dir == "north":
-            self.north_set.remove(item)
-        elif dir == "south":
-            self.south_set.remove(item)
-        elif dir == "up":
-            self.up_set.remove(item)
-        elif dir == "down":
-            self.down_set.remove(item)
-        else:
-            raise Exception("invalid direction")
-            
+        set = self.get_set(dir)
+        set.remove(item)

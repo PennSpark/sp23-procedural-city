@@ -27,4 +27,5 @@ class Block:
         return self._possible_tiles
 
     def set_possible_tiles(self, possible_tiles):
+        # TODO: recursion here!! otherwise possible tiles will not be valid
         self._possible_tiles = possible_tiles

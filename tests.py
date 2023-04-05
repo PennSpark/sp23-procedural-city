@@ -25,7 +25,7 @@ def test_2x2_board():
 
     while len(board.block_heap) != 0:
         next_block = heapq.heappop(board.block_heap)
-        board.choice(next_block[1][2], next_block[1][1], next_block[1][0])
+        board.collapse(next_block[1][2], next_block[1][1], next_block[1][0])
     
     board.print_board()
 
