@@ -8,11 +8,12 @@ class Tile:
     name_to_index = dict(zip(names, keys))
 
     # Define tile name, initialize empty direction sets
-    def __init__(self, name, rotation, faces = [[""], [""], [""], [""], [""], [""]]):
+    def __init__(self, name, rotation, faces, tags):
         self.maya_name = name
         self.name = f'{name}_{rotation}'
         self.rotation = rotation
         self.faces = faces
+        self.tags = tags
         self.sets = [set() for _ in range(6)]
     
     def getTileName(self):
@@ -39,10 +40,12 @@ class Tile:
     def generate_sets(tile1, tile2):
         """Add all possible adjacency rules using tile2 to tile1 sets, with locked rotation"""
         faces_1 = tile1.faces
-        faces_2 = tile2.faces
+        faces_2 = tile2.tags
         for i in range(6):
             j = Tile.opposite_dir[i]
-            if faces_1[i].intersection(faces_2[j]):
+            if faces_1[i] in (faces_2[j]):
+                if ((tile1.maya_name == "Building_Corner" and tile2.maya_name == "Building_Corner") or (tile1.maya_name == "Path_Corner" and tile2.maya_name == "Path_Corner") and (tile1.rotation != tile2.rotation)):
+                    continue
                 #print(f"Tile 1 ({Tile.name_map[i]}): {faces_1[i]}")
                 #print(f"Tile 2 ({Tile.name_map[j]}): {faces_2[j]}")
                 tile1.add_to_set(Tile.index_to_name[i], [tile2])
@@ -54,11 +57,13 @@ class Tile:
             last_rot = out_list[-1]
 
             faces = []
+            tags = []
             for f in range(6):
                 # TODO: make sure this goes the right direction
                 faces.append(last_rot.faces[Tile.rotated_cw[f]])
+                tags.append(last_rot.tags[Tile.rotated_cw[f]])
             
-            out_list.append(Tile(tile.maya_name, (last_rot.rotation + 1) % 4, faces))
+            out_list.append(Tile(tile.maya_name, (last_rot.rotation + 1) % 4, faces, tags))
             
         return out_list
                             

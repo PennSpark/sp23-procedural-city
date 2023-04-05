@@ -112,18 +112,18 @@ def main():
     # Tile(name, [up, down, west, east, north, south])
 
     # tiles on https://docs.google.com/spreadsheets/d/126zAezKKaoGMzls38S5Fy72Ctz77F2zn7gWG4wSsJe0/edit?usp=sharing
-    Building_Any = Tile("Building_Any", 0, [set(['BuildingWBuilding', 'Empty']), set(['BuildingWGround']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty'])])
-    Building_Wall = Tile("Building_Wall", 0, [set(['BuildingWBuilding', 'Empty']), set(['BuildingWGround']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['Empty']), set(['BuildingWBuilding', 'Empty'])])
-    Building_TopFloor = Tile("Building_TopFloor", 0, [set(['Empty']), set(['BuildingWGround']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty'])])
-    Building_Corner = Tile("Building_Corner", 0, [set(['BuildingWBuilding','Empty']), set(['BuildingWGround']), set(['BuildingWBuilding', 'Empty']), set(['Empty']), set(['Empty']), set(['BuildingWBuilding', 'Empty'])])
-    Building_Door = Tile("Building_Door", 0, [set(['BuildingWBuilding','Empty']), set(['BuildingWGround']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['Path']), set(['BuildingWBuilding', 'Empty'])])
-    Path_Straight = Tile("Path_Straight", 0, [set(['Empty']), set(['Empty']), set(['Ground']), set(['Ground']), set(['Path']), set(['Path'])])
-    Path_Corner = Tile("Path_Corner", 0, [set(['Empty']), set(['Empty']), set(['Path']), set(['Ground']), set(['Path']), set(['Ground'])])   
-    Path_Branch = Tile("Path_Branch", 0, [set(['Empty']), set(['Empty']), set(['Path']), set(['Path']), set(['Path']), set(['Ground'])])
-    Stairs = Tile("Stairs", 0, [set(['Empty']), set(['Ground']), set(['Empty', 'Ground']), set(['Empty', 'Ground']), set(['Path']), set(['EmptyWPathUnder'])])
-    Ground = Tile("Ground", 0, [set(['Empty', 'BuildingWGround', 'Ground']), set(['N/A']), set(['Ground']), set(['Ground']), set(['Ground']), set(['Ground'])])
-    Empty = Tile("Empty", 0, [set(['Empty']), set(['Empty']), set(['Empty']), set(['Empty']), set(['Empty']), set(['Empty'])])
-    Empty_2 = Tile("Empty", 0, [set(['Empty']), set(['Path']), set(['EmptyWPathUnder', 'BuildingWBuilding', 'BuildingWGround', 'Ground', 'Path']), set(['EmptyWPathUnder', 'BuildingWBuilding', 'BuildingWGround', 'Ground', 'Path']), set(['EmptyWPathUnder']), set(['EmptyWPathUnder', 'BuildingWBuilding', 'BuildingWGround', 'Ground', 'Path'])])         
+    Building_Any = Tile("Building_Any", 0, ["Empty","Empty","Empty","Empty","Empty","Empty"], [set(['BuildingWBuilding', 'Empty']), set(['BuildingWGround']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty'])])
+    Building_Wall = Tile("Building_Wall", 0, ["Empty","Empty","Empty","Empty","Empty","Empty"], [set(['BuildingWBuilding', 'Empty']), set(['BuildingWGround']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['Empty']), set(['BuildingWBuilding', 'Empty'])])
+    Building_TopFloor = Tile("Building_TopFloor", 0, ["Empty","Empty","Empty","Empty","Empty","Empty"], [set(['Empty']), set(['BuildingWGround']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty'])])
+    Building_Corner = Tile("Building_Corner", 0, ["Empty","Empty","Empty","Empty","Empty","Empty"], [set(['BuildingWBuilding','Empty']), set(['BuildingWGround']), set(['BuildingWBuilding', 'Empty']), set(['Empty']), set(['Empty']), set(['BuildingWBuilding', 'Empty'])])
+    Building_Door = Tile("Building_Door", 0, ["Empty","Empty","Empty","Empty","Empty","Empty"], [set(['BuildingWBuilding','Empty']), set(['BuildingWGround']), set(['BuildingWBuilding', 'Empty']), set(['BuildingWBuilding', 'Empty']), set(['Path']), set(['BuildingWBuilding', 'Empty'])])
+    Path_Straight = Tile("Path_Straight", 0, ["Empty","Empty","Empty","Empty","Empty","Empty"], [set(['Empty']), set(['Empty']), set(['Ground']), set(['Ground']), set(['Path']), set(['Path'])])
+    Path_Corner = Tile("Path_Corner", 0, ["Empty","Empty","Empty","Empty","Empty","Empty"], [set(['Empty']), set(['Empty']), set(['Path']), set(['Ground']), set(['Path']), set(['Ground'])])   
+    Path_Branch = Tile("Path_Branch", 0, ["Empty","Empty","Empty","Empty","Empty","Empty"], [set(['Empty']), set(['Empty']), set(['Path']), set(['Path']), set(['Path']), set(['Ground'])])
+    Stairs = Tile("Stairs", 0, ["Empty","Empty","Empty","Empty","Empty","Empty"], [set(['Empty']), set(['Ground']), set(['Empty', 'Ground']), set(['Empty', 'Ground']), set(['Path']), set(['EmptyWPathUnder'])])
+    Ground = Tile("Ground", 0, ["Empty","Empty","Empty","Empty","Empty","Empty"], [set(['Empty', 'BuildingWGround', 'Ground']), set(['N/A']), set(['Ground']), set(['Ground']), set(['Ground']), set(['Ground'])])
+    Empty = Tile("Empty", 0, ["Empty","Empty","Empty","Empty","Empty","Empty"], [set(['Empty']), set(['Empty']), set(['Empty']), set(['Empty']), set(['Empty']), set(['Empty'])])
+    Empty_2 = Tile("Empty_2", 0, ["Empty","Empty","Empty","Empty","Empty","Empty"], [set(['Empty']), set(['Path']), set(['EmptyWPathUnder', 'BuildingWBuilding', 'BuildingWGround', 'Ground', 'Path']), set(['EmptyWPathUnder', 'BuildingWBuilding', 'BuildingWGround', 'Ground', 'Path']), set(['EmptyWPathUnder']), set(['EmptyWPathUnder', 'BuildingWBuilding', 'BuildingWGround', 'Ground', 'Path'])])         
 
     # tiles = [tile_1, tile_2, tile_3, tile_4, tile_5, tile_6, tile_7, tile_8, tile_9, tile_10]
     tiles_norot = [Building_Any, Building_Wall, Building_TopFloor, Building_Corner, Building_Door, Path_Straight, Path_Corner, Path_Branch, Stairs, Ground, Empty, Empty_2]
