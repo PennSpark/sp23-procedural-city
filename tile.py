@@ -8,16 +8,15 @@ class Tile:
     name_to_index = dict(zip(names, keys))
 
     # Define tile name, initialize empty direction sets
-    def __init__(self, name, rotation, faces, tags):
+    def __init__(self, name, rotation, faces):
         self.maya_name = name
         self.name = f'{name}_{rotation}'
         self.rotation = rotation
         self.faces = faces
-        self.tags = tags
         self.sets = [set() for _ in range(6)]
     
     def getTileName(self):
-        return self.name
+        return f"{self.maya_name}_{self.rotation}"
     
     def get_set(self, dir):
         """Get a tile set from direction string"""
@@ -40,31 +39,27 @@ class Tile:
     def generate_sets(tile1, tile2):
         """Add all possible adjacency rules using tile2 to tile1 sets, with locked rotation"""
         faces_1 = tile1.faces
-        faces_2 = tile2.tags
+        faces_2 = tile2.faces
         for i in range(6):
             j = Tile.opposite_dir[i]
-            if faces_1[i] in (faces_2[j]):
-                if ((tile1.maya_name == "Building_Corner" and tile2.maya_name == "Building_Corner") or (tile1.maya_name == "Path_Corner" and tile2.maya_name == "Path_Corner") and (tile1.rotation != tile2.rotation)):
-                    continue
+            if faces_1[i] == faces_2[j]:
                 #print(f"Tile 1 ({Tile.name_map[i]}): {faces_1[i]}")
                 #print(f"Tile 2 ({Tile.name_map[j]}): {faces_2[j]}")
                 tile1.add_to_set(Tile.index_to_name[i], [tile2])
 
     def create_rotations(tile):
-        """Generate 3 more rotations of a tile, and return a list with all 4"""
+        """Generate 3 more rotations of a tile, and return a tuple with all 4"""
         out_list = [tile]
-        for _ in range(3):
+        for _ in range(2):
             last_rot = out_list[-1]
 
-            faces = []
-            tags = []
+            face_sets = []
             for f in range(6):
                 # TODO: make sure this goes the right direction
-                faces.append(last_rot.faces[Tile.rotated_cw[f]])
-                tags.append(last_rot.tags[Tile.rotated_cw[f]])
-            
-            out_list.append(Tile(tile.maya_name, (last_rot.rotation + 1) % 4, faces, tags))
-            
+                face_sets.append(last_rot.sets[Tile.rotated_cw[f]])
+
+            out_list.append(Tile(tile.maya_name, (last_rot.rotation + 1) % 4, face_sets))
+
         return out_list
                             
             
