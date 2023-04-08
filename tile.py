@@ -18,6 +18,9 @@ class Tile:
     def getTileName(self):
         return f"{self.maya_name}_{self.rotation}"
     
+    def getMayaName(self):
+        return self.maya_name
+    
     def get_set(self, dir):
         """Get a tile set from direction string"""
         index = Tile.name_to_index.get(dir)
@@ -34,13 +37,14 @@ class Tile:
         print(self.name)
         for idx, set in enumerate(self.sets):
             print(f"{Tile.index_to_name[idx]}: {list(map(Tile.getTileName, list(set)))}")
+    
 
     # NOTE: We have to call this between all pairs AFTER generating rotations.
     def generate_sets(tile1, tile2):
         """Add all possible adjacency rules using tile2 to tile1 sets, with locked rotation"""
         faces_1 = tile1.faces
         faces_2 = tile2.faces
-        for i in range(6):
+        for i in range(2, 6):
             j = Tile.opposite_dir[i]
             if faces_1[i] == faces_2[j]:
                 #print(f"Tile 1 ({Tile.name_map[i]}): {faces_1[i]}")
@@ -50,13 +54,13 @@ class Tile:
     def create_rotations(tile):
         """Generate 3 more rotations of a tile, and return a tuple with all 4"""
         out_list = [tile]
-        for _ in range(2):
+        for _ in range(3):
             last_rot = out_list[-1]
 
             face_sets = []
             for f in range(6):
                 # TODO: make sure this goes the right direction
-                face_sets.append(last_rot.sets[Tile.rotated_cw[f]])
+                face_sets.append(last_rot.faces[Tile.rotated_cw[f]])
 
             out_list.append(Tile(tile.maya_name, (last_rot.rotation + 1) % 4, face_sets))
 

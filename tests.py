@@ -29,8 +29,28 @@ def test_2x2_board():
     
     board.print_board()
 
+def path_straight_rotation_test():
+   Path_Straight = Tile("Path_Straight", 0, ["pack_s","vert_building","ground","ground","path","path"])
+   path_rots = Tile.create_rotations(Path_Straight)
+   for i in range (len(path_rots)):
+      for j in range(len(path_rots)):
+          Tile.generate_sets(path_rots[i], path_rots[j])
+   for path in path_rots:
+      path.print_sets()
+
+def path_corner_to_straight_generation_test():
+   Path_Straight = Tile("Path_Straight", 0, ["pack_s","vert_building","ground","ground","path","path"])
+   Path_Corner = Tile("Path_Corner", 0, ["pack_c","vert_building","path","ground","path","ground"]) 
+   tiles = [Path_Straight, Path_Corner]
+   for i in range (len(tiles)):
+      for j in range(len(tiles)):
+          Tile.generate_sets(tiles[i], tiles[j])
+   for path in tiles:
+      path.print_sets()
+
 if __name__ == '__main__':
-  print(test_is_tiled())
-  print(test_num_possible_tiles())
+  #print(test_is_tiled())
+  #print(test_num_possible_tiles())
   # TODO: something funky is happening here
-  print(test_2x2_board())
+  #print(test_2x2_board())
+  path_corner_to_straight_generation_test()
