@@ -54,8 +54,8 @@ class Board:
     def place_tile(self, tile, x, y, z):
         if tile.maya_name == 'Empty' or tile.maya_name == 'Path_Branch_Air' or tile.maya_name == 'Path_Corner_Air' or tile.maya_name == 'Path_Straight_Air': return
         pass
-        #cmds.duplicate(f"{tile.maya_name}", n=f"{tile.name}_{x}{y}{z}_{tile.rotation}")
-        #cmds.select(f"{tile.name}_{x}{y}{z}")
+        #cmds.duplicate(f"{tile.maya_name}", n=f"{tile.maya_name}_{x}{y}{z}_{tile.rotation}")
+        #cmds.select(f"{tile.maya_name}_{x}{y}{z}_{tile.rotation}")
         #cmds.rotate(0, tile.rotation*90, 0)
         #cmds.move(x+1, y+1, z+1)
     
@@ -76,7 +76,7 @@ class Board:
         ("up", (0, 1, 0)),
     ]
 
-    def collapse(self, x, y, z):
+    def collapse(self, x, y, z, seed):
         #print("{}, {}, {}".format(x, y, z))
         block = self.board[z][y][x]
 
@@ -91,6 +91,9 @@ class Board:
         
         # For now just pick tile at index 0, TODO: add probability distribution for pick
         tile_placed = random.choice(list(block.get_possible_tiles()))
+        if (seed):
+            tile_placed = seed
+            #print(tile_placed.getTileName())
         block.set_tile(tile_placed)
         self.push_tile(tile_placed, x, y, z)
         print("Placed tile " + tile_placed.getTileName() + " at block " + str((x, y, z)))
@@ -115,7 +118,6 @@ def main():
     Building_Any = Tile("Building_Any", 0, ["vert_building","vert_building","interior","interior","interior","interior"])
     Building_Wall = Tile("Building_Wall", 0, ["vert_building","vert_building","wall","wall","interior","air"])
     Building_TopFloor = Tile("Building_TopFloor", 0, ["top_air","vert_building","top","top","top","top"])
-    TopFloor_Air = Tile("Empty", 0, ["air","top_air","air","air","air","air"])  
     Building_Corner = Tile("Building_Corner", 0, ["vert_building","vert_building","wall","air","wall","air"])
     Building_Door = Tile("Building_Door", 0, ["vert_building","vert_building","interior","interior","interior","pack"])
     Path_Straight = Tile("Path_Straight", 0, ["pack_s","vert_building","ground","ground","path","path"])
@@ -130,7 +132,7 @@ def main():
     Empty = Tile("Empty", 0, ["air","air","air","air","air","air"])         
 
     # tiles = [tile_1, tile_2, tile_3, tile_4, tile_5, tile_6, tile_7, tile_8, tile_9, tile_10]
-    tiles_norot = [Building_Any, Building_Wall, Building_TopFloor, TopFloor_Air, Building_Corner, Building_Door, Path_Straight, Path_Straight_Air, Path_Corner, Path_Corner_Air, Path_Branch, Path_Branch_Air, Stairs, Stair_Hack, Ground, Empty]
+    tiles_norot = [Ground, Building_Any, Building_Wall, Building_TopFloor, Building_Corner, Building_Door, Path_Straight, Path_Straight_Air, Path_Corner, Path_Corner_Air, Path_Branch, Path_Branch_Air, Stairs, Stair_Hack, Empty]
     tiles = []
     rotmap = {}
     for tile in tiles_norot:
@@ -144,6 +146,18 @@ def main():
 
     for tile in tiles:
         if tile.maya_name == 'Ground':
+            upset = []
+            upset.extend(rotmap['Ground'])
+            upset.extend(rotmap['Building_Any'])
+            upset.extend(rotmap['Building_Wall'])
+            upset.extend(rotmap['Building_Corner'])
+            upset.extend(rotmap['Building_Door'])
+            upset.extend(rotmap["Path_Corner"])
+            upset.extend(rotmap["Path_Straight"])
+            upset.extend(rotmap["Path_Branch"])
+            upset.extend(rotmap["Stairs"])
+            upset.extend(rotmap["Empty"])
+            tile.add_to_set("up", upset)
             tile.add_to_set("down", rotmap['Ground'])
         elif tile.maya_name == 'Stairs':
             rotation = tile.rotation
@@ -177,15 +191,83 @@ def main():
             rotation = tile.rotation
             tile.add_to_set("down", [rotmap['Path_Branch'][rotation]])
             tile.add_to_set("up", rotmap['Empty'])
+        elif tile.maya_name == 'Building_Any':
+            downset = []
+            downset.extend(rotmap['Ground'])
+            downset.extend(rotmap['Building_Any'])
+            upset = []
+            upset.extend(rotmap['Building_TopFloor'])
+            upset.extend(rotmap['Building_Any'])
+            #upset.extend(rotmap['Building_Corner'))
+            #upset.extend(rotmap['Building_Wall'))
+            tile.add_to_set("down", downset)
+            tile.add_to_set("up", upset)
+        elif tile.maya_name == 'Building_Wall':
+            rotation = tile.rotation
+            downset = []
+            downset.extend(rotmap['Ground'])
+            downset.append(rotmap['Building_Wall'][rotation])
+            upset = []
+            upset.append(rotmap['Building_Wall'][rotation])
+            upset.extend(rotmap['Building_TopFloor'])
+            tile.add_to_set("down", downset)
+            tile.add_to_set("up", upset)
+        elif tile.maya_name == 'Building_Door':
+            rotation = tile.rotation
+            downset = []
+            downset.extend(rotmap['Ground'])
+            upset = []
+            upset.append(rotmap['Building_Wall'][rotation])
+            upset.extend(rotmap['Building_TopFloor'])
+            tile.add_to_set("down", downset)
+            tile.add_to_set("up", upset)
+        elif tile.maya_name == 'Building_Corner':
+            rotation = tile.rotation
+            downset = []
+            downset.extend(rotmap['Ground'])
+            downset.append(rotmap['Building_Corner'][rotation])
+            upset = []
+            upset.append(rotmap['Building_Corner'][rotation])
+            upset.extend(rotmap['Building_TopFloor'])
+            tile.add_to_set("down", downset)
+            tile.add_to_set("up", upset)
+        elif tile.maya_name == 'Building_TopFloor':
+            rotation = tile.rotation
+            downset = []
+            downset.extend(rotmap['Building_Wall'])
+            downset.extend(rotmap['Building_Corner'])
+            downset.extend(rotmap['Building_Any'])
+            upset = []
+            upset.extend(rotmap['Empty'])
+            tile.add_to_set("down", downset)
+            tile.add_to_set("up", upset)
+        elif tile.maya_name == 'Empty':
+            rotation = tile.rotation
+            downset = []
+            downset.extend(rotmap['Ground'])
+            downset.extend(rotmap['Building_TopFloor'])
+            downset.extend(rotmap['Path_Straight_Air'])
+            downset.extend(rotmap['Path_Corner_Air'])
+            downset.extend(rotmap['Path_Branch_Air'])
+            downset.extend(rotmap['Stair_Hack'])
+            upset = []
+            upset.extend(rotmap['Empty'])
+            tile.add_to_set("down", downset)
+            tile.add_to_set("up", upset)
+        
 
     #for tile in tiles:
     #    tile.print_sets()
-    board = Board(10, 2, 10, set(tiles))
-
+    
+    board = Board(11, 4, 11, set(tiles))
+    seed_block = heapq.heappop(board.block_heap)
+    board.collapse(seed_block[1][2], seed_block[1][1], seed_block[1][0], Ground)
     while len(board.block_heap) != 0:
         next_block = heapq.heappop(board.block_heap)
-        if board.collapse(next_block[1][2], next_block[1][1], next_block[1][0]):
-            board = Board(10, 2, 10, set(tiles))
+        if board.collapse(next_block[1][2], next_block[1][1], next_block[1][0], None):
+            board = Board(11, 4, 11, set(tiles))
+            seed_block = heapq.heappop(board.block_heap)
+            board.collapse(seed_block[1][2], seed_block[1][1], seed_block[1][0], Ground)
             print("New Generation\n")
     
     board.print_board()
