@@ -16,6 +16,25 @@ import random
 # Up: +y
 # Down: -y
 
+tile_weight_map = {
+    "Building_Any": 12,
+    "Building_Wall": 12, 
+    "Building_TopFloor": 12,
+    "TopFloor_Air": 12, 
+    "Building_Corner": 12, 
+    "Building_Door": 12, 
+    "Path_Straight": 12, 
+    "Path_Straight_Air": 12, 
+    "Path_Corner": 12, 
+    "Path_Corner_Air": 12, 
+    "Path_Branch": 12, 
+    "Path_Branch_Air": 12, 
+    "Stairs": 12, 
+    "Stair_Hack": 12, 
+    "Ground": 12, 
+    "Empty": 12
+}
+
 class Board:
     def __init__(self, X, Y, Z, tiles):
         self.board = [[[Block(tiles.copy(), (x,y,z)) for x in range(X) ] for y in range(Y)] for z in range(Z)]
@@ -76,6 +95,35 @@ class Board:
         ("up", (0, 1, 0)),
     ]
 
+    def choose_tile(all_possible_tiles):
+        # create a tile-threshold mapping
+        tile_threshold_map = {}
+        cumulative_weight = 0
+        for tile in all_possible_tiles:
+            weight = tile_weight_map[tile.maya_name]
+            if tile.maya_name not in tile_threshold_map.keys(): # already exit 
+                tile_threshold_map[tile.maya_name] = cumulative_weight + weight
+                # update
+                cumulative_weight = cumulative_weight + weight
+            # print(f'tile name is {tile.name} with threshold {cumulative_weight}')
+        # print(tile_threshold_map)
+
+        rand = random.randrange(cumulative_weight)
+        for tile_name, count_threshold in tile_threshold_map.items():
+            if (rand < count_threshold):
+                for t in all_possible_tiles:
+                    if tile_name == t.maya_name:
+                        return Board.choose_orientation(all_possible_tiles, tile_name)
+        return None
+    
+    def choose_orientation(all_possible_tiles, tile_name):
+        tiles = []
+        for tile in all_possible_tiles:
+            if tile.maya_name == tile_name:
+                tiles.append(tile)
+        rand = random.randrange(len(tiles))
+        return tiles[rand]
+
     def collapse(self, x, y, z, seed):
         #print("{}, {}, {}".format(x, y, z))
         block = self.board[z][y][x]
@@ -90,7 +138,8 @@ class Board:
             return 1
         
         # For now just pick tile at index 0, TODO: add probability distribution for pick
-        tile_placed = random.choice(list(block.get_possible_tiles()))
+
+        tile_placed = Board.choose_tile(list(block.get_possible_tiles()))
         if (seed):
             tile_placed = seed
             #print(tile_placed.getTileName())
@@ -258,14 +307,14 @@ def main():
 
     #for tile in tiles:
     #    tile.print_sets()
-    
-    board = Board(11, 4, 11, set(tiles))
+    x, y, z = 5, 4, 5
+    board = Board(x, y, z, set(tiles))
     seed_block = heapq.heappop(board.block_heap)
     board.collapse(seed_block[1][2], seed_block[1][1], seed_block[1][0], Ground)
     while len(board.block_heap) != 0:
         next_block = heapq.heappop(board.block_heap)
         if board.collapse(next_block[1][2], next_block[1][1], next_block[1][0], None):
-            board = Board(11, 4, 11, set(tiles))
+            board = Board(x, y, z, set(tiles))
             seed_block = heapq.heappop(board.block_heap)
             board.collapse(seed_block[1][2], seed_block[1][1], seed_block[1][0], Ground)
             print("New Generation\n")
