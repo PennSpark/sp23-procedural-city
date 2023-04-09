@@ -84,6 +84,14 @@ class Board:
             obj = self.render_stack.pop()
             self.place_tile(obj[0], obj[1], obj[2], obj[3])
 
+    def print_to_file(self):
+        f = open("output.txt", "a")
+        while self.render_stack:
+            obj = self.render_stack.pop()
+            # print(f"{obj[0].maya_name} {obj[0].rotation} {obj[1]} {obj[2]} {obj[3]}\n")
+            f.write(f"{obj[0].maya_name} {obj[0].rotation} {obj[1]} {obj[2]} {obj[3]}\n")
+        f.close()
+
     def is_block_inbounds(self, x, y, z):
         return x < len(self.board[0][0]) and y < len(self.board[0]) and z < len(self.board) and x > -1 and y > -1 and z > -1
 
@@ -310,7 +318,7 @@ def main():
 
     #for tile in tiles:
     #    tile.print_sets()
-    x, y, z = 4, 4, 8
+    x, y, z = 4, 4, 4
     board = Board(x, y, z, set(tiles))
     seed_block = heapq.heappop(board.block_heap)
     board.collapse(seed_block[1][2], seed_block[1][1], seed_block[1][0], Ground)
@@ -322,9 +330,9 @@ def main():
             board.collapse(seed_block[1][2], seed_block[1][1], seed_block[1][0], Ground)
             print("New Generation\n")
     
-    board.print_board()
-    board.render_tiles()
-    
+    # board.print_board()
+    # board.render_tiles()
+    board.print_to_file()
 
 if __name__ == "__main__":
     main()
