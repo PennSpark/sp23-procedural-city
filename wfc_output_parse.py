@@ -1,7 +1,7 @@
 import maya.cmds as cmds
 
 def main():
-    f = open("/Users/omgitsmonday/procedural-city/output.txt", "r")
+    f = open("/Users/omgitsmonday/procedural-city/output.txt", "r") # change file directory to urs here
     string_cmds =f.readlines()
     print(string_cmds)
     for string_cmd in string_cmds:
